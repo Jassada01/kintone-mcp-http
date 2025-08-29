@@ -29,6 +29,15 @@ export const getKintoneClient = (
     KINTONE_PFX_FILE_PASSWORD,
   } = config.config;
 
+  console.log('Creating Kintone client with config:');
+  console.log('- Base URL:', KINTONE_BASE_URL);
+  console.log('- Auth type:', config.isApiTokenAuth ? 'API Token' : 'Username/Password');
+  console.log('- Username:', KINTONE_USERNAME ? '***' : 'not set');
+  console.log('- Password:', KINTONE_PASSWORD ? '***' : 'not set');
+  console.log('- API Token:', KINTONE_API_TOKEN ? '***' : 'not set');
+  console.log('- Basic Auth:', KINTONE_BASIC_AUTH_USERNAME ? 'enabled' : 'disabled');
+  console.log('- Proxy:', HTTPS_PROXY || 'not set');
+
   const authParams = buildAuthParams({
     username: KINTONE_USERNAME,
     password: KINTONE_PASSWORD,
@@ -36,22 +45,28 @@ export const getKintoneClient = (
     isApiTokenAuth: config.isApiTokenAuth,
   });
 
-  client = new KintoneRestAPIClient({
-    baseUrl: KINTONE_BASE_URL,
-    ...authParams,
-    ...buildBasicAuthParam({
-      basicAuthUsername: KINTONE_BASIC_AUTH_USERNAME,
-      basicAuthPassword: KINTONE_BASIC_AUTH_PASSWORD,
-    }),
-    userAgent: `${PACKAGE_NAME}@${version}`,
-    httpsAgent: buildHttpsAgent({
-      proxy: HTTPS_PROXY,
-      pfxFilePath: KINTONE_PFX_FILE_PATH,
-      pfxPassword: KINTONE_PFX_FILE_PASSWORD,
-    }),
-  });
-
-  return client;
+  try {
+    client = new KintoneRestAPIClient({
+      baseUrl: KINTONE_BASE_URL,
+      ...authParams,
+      ...buildBasicAuthParam({
+        basicAuthUsername: KINTONE_BASIC_AUTH_USERNAME,
+        basicAuthPassword: KINTONE_BASIC_AUTH_PASSWORD,
+      }),
+      userAgent: `${PACKAGE_NAME}@${version}`,
+      httpsAgent: buildHttpsAgent({
+        proxy: HTTPS_PROXY,
+        pfxFilePath: KINTONE_PFX_FILE_PATH,
+        pfxPassword: KINTONE_PFX_FILE_PASSWORD,
+      }),
+    });
+    
+    console.log('Kintone client created successfully');
+    return client;
+  } catch (error) {
+    console.error('Failed to create Kintone client:', error);
+    throw error;
+  }
 };
 
 export const resetKintoneClient = (): void => {

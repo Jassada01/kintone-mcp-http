@@ -83,16 +83,25 @@ export const getApps = createTool(
     outputSchema,
   },
   async ({ ids, codes, name, spaceIds, offset, limit }) => {
-    const config = parseKintoneClientConfig();
-    const client = getKintoneClient(config);
+    console.log('get-apps tool called with params:', { ids, codes, name, spaceIds, offset, limit });
+    
+    try {
+      const config = parseKintoneClientConfig();
+      const client = getKintoneClient(config);
 
-    const response = await client.app.getApps({
+      console.log('Making API call to client.app.getApps...');
+      const response = await client.app.getApps({
       ids,
       codes,
       name,
       spaceIds,
       offset,
       limit,
+    });
+
+    console.log('Kintone API response received:', {
+      appsCount: response.apps.length,
+      firstApp: response.apps[0]?.name || 'none'
     });
 
     const result = {
@@ -110,6 +119,7 @@ export const getApps = createTool(
       })),
     };
 
+    console.log('get-apps tool completed successfully');
     return {
       structuredContent: result,
       content: [
@@ -119,5 +129,16 @@ export const getApps = createTool(
         },
       ],
     };
+    } catch (error) {
+      console.error('get-apps tool failed:', error);
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        status: (error as any)?.response?.status,
+        statusText: (error as any)?.response?.statusText,
+        data: (error as any)?.response?.data
+      });
+      throw error;
+    }
   },
 );
