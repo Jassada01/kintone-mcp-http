@@ -30,6 +30,9 @@ export const mergeEnvironmentAndCommandLine = (
     KINTONE_PFX_FILE_PASSWORD:
       args["pfx-file-password"] ?? env.KINTONE_PFX_FILE_PASSWORD,
     HTTPS_PROXY: args.proxy ?? env.HTTPS_PROXY ?? env.https_proxy,
+    PORT: args.port ?? env.PORT,
+    HOST: args.host ?? env.HOST,
+    CORS_ORIGIN: args["cors-origin"] ?? env.CORS_ORIGIN,
   };
 };
 

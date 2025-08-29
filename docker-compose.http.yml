@@ -1,0 +1,37 @@
+services:
+  kintone-mcp-server-http:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.http
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      # Required Kintone configuration
+      KINTONE_BASE_URL: ${KINTONE_BASE_URL}
+      KINTONE_USERNAME: ${KINTONE_USERNAME:-}
+      KINTONE_PASSWORD: ${KINTONE_PASSWORD:-}
+      KINTONE_API_TOKEN: ${KINTONE_API_TOKEN:-}
+      
+      # Optional Basic Auth
+      KINTONE_BASIC_AUTH_USERNAME: ${KINTONE_BASIC_AUTH_USERNAME:-}
+      KINTONE_BASIC_AUTH_PASSWORD: ${KINTONE_BASIC_AUTH_PASSWORD:-}
+      
+      # Optional client certificate
+      KINTONE_PFX_FILE_PATH: ${KINTONE_PFX_FILE_PATH:-}
+      KINTONE_PFX_FILE_PASSWORD: ${KINTONE_PFX_FILE_PASSWORD:-}
+      
+      # Optional proxy
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      
+      # HTTP server configuration  
+      HOST: 0.0.0.0
+      PORT: 3000
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:*}
+      NODE_ENV: ${NODE_ENV:-production}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/mcp || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

@@ -20,6 +20,9 @@ export const parseCommandLineOptions = (args: string[]) => {
       "pfx-file-path": { type: "string" },
       "pfx-file-password": { type: "string" },
       proxy: { type: "string" },
+      port: { type: "string" },
+      host: { type: "string" },
+      "cors-origin": { type: "string" },
     },
   });
 

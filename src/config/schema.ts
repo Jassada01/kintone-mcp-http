@@ -57,6 +57,26 @@ export const configSchema = z
         { message: "Invalid proxy URL format" },
       )
       .describe("HTTPS proxy URL (e.g., http://proxy.example.com:8080)"),
+    PORT: z
+      .string()
+      .optional()
+      .refine(
+        (value) => {
+          if (!value) return true;
+          const port = parseInt(value, 10);
+          return !isNaN(port) && port > 0 && port <= 65535;
+        },
+        { message: "Port must be a valid number between 1 and 65535" },
+      )
+      .describe("HTTP server port (default: 3000)"),
+    HOST: z
+      .string()
+      .optional()
+      .describe("HTTP server host (default: localhost)"),
+    CORS_ORIGIN: z
+      .string()
+      .optional()
+      .describe("CORS origin pattern (default: http://localhost:*)"),
     KINTONE_PFX_FILE_PATH: z
       .string()
       .optional()
