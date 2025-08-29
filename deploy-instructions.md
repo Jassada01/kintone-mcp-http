@@ -24,9 +24,9 @@ cd kintone-mcp-http
 ### 2. Create Environment File
 ```bash
 cat << EOF > .env
-KINTONE_BASE_URL=https://isth-demo.kintone.com/
-KINTONE_USERNAME=Jassadaporn@kintone.com
-KINTONE_PASSWORD=Caster@2020
+KINTONE_BASE_URL=https://your-company.cybozu.com
+KINTONE_USERNAME=your-username
+KINTONE_PASSWORD=your-password
 NODE_ENV=production
 EOF
 ```
